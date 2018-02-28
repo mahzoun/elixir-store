@@ -1,11 +1,14 @@
 defmodule KV.Registry do
   use GenServer
+  require Logger
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
   def lookup(server, name) do
+    Logger.info(name)
+    Logger.info(server)
     GenServer.call(server, {:lookup, name})
   end
 
@@ -24,6 +27,7 @@ defmodule KV.Registry do
   end
 
   def handle_cast({:create, name}, {names, refs}) do
+    Logger.info("cast is called")
     if Map.has_key?(names, name) do
       {:noreply, {names, refs}}
     else
